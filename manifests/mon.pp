@@ -152,6 +152,7 @@ test -e \$mon_data/done
       Ceph_config<||> ->
       # prevent automatic creation of the client.admin key by ceph-create-keys
       exec { "ceph-mon-${cluster_name}.client.admin.keyring-${id}":
+        unless  => "/usr/bin/test -f /etc/ceph/${cluster_name}.client.admin.keyring",
         command => "/bin/true # comment to satisfy puppet syntax requirements
 set -ex
 touch /etc/ceph/${cluster_name}.client.admin.keyring",
@@ -161,6 +162,7 @@ test -e /etc/ceph/${cluster_name}.client.admin.keyring",
       }
       ->
       exec { $ceph_mkfs:
+        unless    => "/usr/bin/test -d \$(ceph-mon ${cluster_option} --id ${id} --show-config-value mon_data)",
         command   => "/bin/true # comment to satisfy puppet syntax requirements
 set -ex
 mon_data=\$(ceph-mon ${cluster_option} --id ${id} --show-config-value mon_data)
